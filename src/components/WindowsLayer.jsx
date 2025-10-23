@@ -9,11 +9,13 @@ export default function WindowsLayer() {
       {windows.map((win, index) => (
         <div
           key={win.name}
-          className={`absolute top-${index * 40 + 100}px left-${index * 40 + 100}px w-[400px] h-[300px] bg-white/80 backdrop-blur-md rounded-xl shadow-xl border border-gray-300 pointer-events-auto`}
-          onMouseDown={() => focusWindow(win.name)}
+          className="absolute w-[400px] h-[300px] bg-white/80 backdrop-blur-md rounded-xl shadow-xl border border-gray-300 pointer-events-auto"
           style={{
+            top: 100 + index * 40, // dynamic top
+            left: 100 + index * 40, // dynamic left
             zIndex: win.focused ? 50 : 20,
           }}
+          onMouseDown={() => focusWindow(win.name)}
         >
           {/* Title bar */}
           <div className="flex justify-between items-center bg-gray-200 px-3 py-1 rounded-t-xl cursor-pointer">

@@ -2,27 +2,32 @@ import React, { useContext } from "react";
 import { WindowContext } from "../contexts/WindowContext";
 
 export default function WindowsLayer() {
-  const { windows, closeWindow } = useContext(WindowContext);
+  const { windows, closeWindow, focusWindow } = useContext(WindowContext);
 
   return (
     <div className="absolute inset-0 z-20 pointer-events-none">
-      {windows.map((win) => (
+      {windows.map((win, index) => (
         <div
           key={win.name}
-          className="absolute top-24 left-24 w-96 h-64 bg-gray-800 text-white rounded shadow-lg border border-gray-600 p-3 pointer-events-auto"
+          className={`absolute top-${index * 40 + 100}px left-${index * 40 + 100}px w-[400px] h-[300px] bg-white/80 backdrop-blur-md rounded-xl shadow-xl border border-gray-300 pointer-events-auto`}
+          onMouseDown={() => focusWindow(win.name)}
+          style={{
+            zIndex: win.focused ? 50 : 20,
+          }}
         >
-          <div className="flex justify-between items-center bg-gray-700 p-2 rounded-t">
-            <span>{win.name}</span>
+          {/* Title bar */}
+          <div className="flex justify-between items-center bg-gray-200 px-3 py-1 rounded-t-xl cursor-pointer">
+            <span className="font-semibold text-gray-700">{win.name}</span>
             <button
               onClick={() => closeWindow(win.name)}
-              className="bg-red-500 text-white px-2 rounded"
+              className="text-red-500 hover:text-red-700"
             >
               ✕
             </button>
           </div>
-          <div className="p-3">
-            <p>This is the {win.name} app.</p>
-          </div>
+
+          {/* Window content */}
+          <div className="p-3 overflow-auto">{win.component}</div>
         </div>
       ))}
     </div>

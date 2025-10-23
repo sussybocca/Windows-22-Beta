@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"
+  publish = "dist"  # Vite builds go to /dist by default
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

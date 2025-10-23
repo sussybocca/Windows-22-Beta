@@ -7,6 +7,7 @@ export const WindowContext = createContext();
 export const WindowProvider = ({ children }) => {
   const [windows, setWindows] = useState([]);
 
+  // Register app components
   const appComponents = {
     Calculator: <Calculator />,
     Notepad: <Notepad />,
@@ -15,11 +16,20 @@ export const WindowProvider = ({ children }) => {
   const openWindow = (name) => {
     setWindows((prev) => {
       const exists = prev.find((w) => w.name === name);
+
       if (exists) {
-        // focus the window
-        return prev.map((w) => ({ ...w, focused: w.name === name }));
+        // Bring that window to front (focus)
+        return prev.map((w) => ({
+          ...w,
+          focused: w.name === name,
+        }));
       }
-      return [...prev, { name, component: appComponents[name], focused: true }];
+
+      // When opening a new app, unfocus all others
+      return [
+        ...prev.map((w) => ({ ...w, focused: false })),
+        { name, component: appComponents[name], focused: true },
+      ];
     });
   };
 
@@ -28,11 +38,15 @@ export const WindowProvider = ({ children }) => {
   };
 
   const focusWindow = (name) => {
-    setWindows((prev) => prev.map((w) => ({ ...w, focused: w.name === name })));
+    setWindows((prev) =>
+      prev.map((w) => ({ ...w, focused: w.name === name }))
+    );
   };
 
   return (
-    <WindowContext.Provider value={{ windows, openWindow, closeWindow, focusWindow }}>
+    <WindowContext.Provider
+      value={{ windows, openWindow, closeWindow, focusWindow }}
+    >
       {children}
     </WindowContext.Provider>
   );

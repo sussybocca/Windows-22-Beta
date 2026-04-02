@@ -6,9 +6,17 @@ export default function ClickAnimation() {
 
   useEffect(() => {
     const handleClick = (e) => {
+      // Don't animate clicks on input, textarea, or interactive elements
+      const isTypingElement = 
+        e.target.tagName === 'INPUT' || 
+        e.target.tagName === 'TEXTAREA' ||
+        e.target.isContentEditable ||
+        e.target.closest('input, textarea, [contenteditable="true"]');
+      
+      if (isTypingElement) return;
+      
       const id = Date.now();
       setClicks((prev) => [...prev, { id, x: e.clientX, y: e.clientY }]);
-      // Remove the click animation after 500ms
       setTimeout(
         () => setClicks((prev) => prev.filter((c) => c.id !== id)),
         500
